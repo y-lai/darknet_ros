@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<launch>
+  <!-- Input image topics for YOLO nodelets -->
+  <arg name="image0" default="qoocamera/image_0" />
+  <arg name="image1" default="qoocamera/image_1" />
+  <arg name="image2" default="qoocamera/image_2" />
+  <arg name="image3" default="qoocamera/image_3" />
+  <arg name="image4" default="qoocamera/image_4" />
+  <arg name="image5" default="qoocamera/image_5" />
+  <arg name="image6" default="qoocamera/image_6" />
+
+
+  <!-- Config and weights folder. -->
+  <arg name="yolo_weights_path"          default="$(find darknet_ros)/yolo_network_config/weights"/>
+  <arg name="yolo_config_path"           default="$(find darknet_ros)/yolo_network_config/cfg"/>
+
+  <!-- ROS and network parameter files -->
+  <arg name="ros_param_file"             default="$(find darknet_ros)/config/ros.yaml"/>
+  <arg name="network_param_file"         default="$(find darknet_ros)/config/yolov3-person.yaml"/>
+
+  <!-- Load parameters -->
+  <rosparam command="load" ns="darknet_ros" file="$(arg ros_param_file)"/>
+  <rosparam command="load" ns="darknet_ros" file="$(arg network_param_file)"/>
+
+  <!-- Darknet and ros wrapper nodelet manager -->
+  <node name="darknet_ros_nodelet_manager" type="nodelet" pkg="nodelet" args="manager" output="screen" respawn="true"/>
+
+  <group ns="yolo_0">
+    <node pkg="nodelet" type="nodelet" name="yolo_nodelet_0" output="screen" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
+        <param name="weights_path"          value="$(arg yolo_weights_path)" />
+        <param name="config_path"           value="$(arg yolo_config_path)" />
+        <rosparam command="load" file="$(arg ros_param_file)" />
+        <rosparam command="load" file="$(arg network_param_file)" />
+        <!-- remap to the correct topic names -->
+        <remap from="camera/rgb/image_raw" to="$(arg image0)" />
+        <remap from="darknet_ros/bounding_boxes" to="bounding_boxes" />
+        <remap from="darknet_ros/check_for_objects" to="check_for_objects" />
+        <remap from="darknet_ros/detection_image" to="detection_image" />
+    </node>
+  </group>
+
+  <group ns="yolo_1">
+    <node pkg="nodelet" type="nodelet" name="yolo_nodelet_1" output="screen" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
+        <param name="weights_path"          value="$(arg yolo_weights_path)" />
+        <param name="config_path"           value="$(arg yolo_config_path)" />
+        <rosparam command="load" file="$(arg ros_param_file)" />
+        <rosparam command="load" file="$(arg network_param_file)" />
+        <!-- remap to the correct topic names -->
+        <remap from="camera/rgb/image_raw" to="$(arg image1)" />
+        <remap from="darknet_ros/bounding_boxes" to="bounding_boxes" />
+        <remap from="darknet_ros/check_for_objects" to="check_for_objects" />
+        <remap from="darknet_ros/detection_image" to="detection_image" />
+    </node>
+  </group>
+
+  <group ns="yolo_2">
+    <node pkg="nodelet" type="nodelet" name="yolo_nodelet_2" output="screen" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
+        <param name="weights_path"          value="$(arg yolo_weights_path)" />
+        <param name="config_path"           value="$(arg yolo_config_path)" />
+        <rosparam command="load" file="$(arg ros_param_file)" />
+        <rosparam command="load" file="$(arg network_param_file)" />
+        <!-- remap to the correct topic names -->
+        <remap from="camera/rgb/image_raw" to="$(arg image2)" />
+        <remap from="darknet_ros/bounding_boxes" to="bounding_boxes" />
+        <remap from="darknet_ros/check_for_objects" to="check_for_objects" />
+        <remap from="darknet_ros/detection_image" to="detection_image" />
+    </node>
+  </group>
+
+</launch>
