@@ -23,12 +23,12 @@ if (CUDA_FOUND)
     CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS};
     -O3
-    -gencode arch=compute_30,code=sm_30
-    -gencode arch=compute_35,code=sm_35
-    -gencode arch=compute_50,code=[sm_50,compute_50]
-    -gencode arch=compute_52,code=[sm_52,compute_52]
+    -gencode arch=compute_60,code=sm_60
     -gencode arch=compute_61,code=sm_61
     -gencode arch=compute_62,code=sm_62
+    -gencode arch=compute_75,code=sm_75
+    -gencode arch=compute_86,code=sm_86
+    -gencode arch=compute_87,code=sm_87
   )
   add_definitions(-DGPU)
 else()
@@ -225,12 +225,12 @@ install(DIRECTORY config launch yolo_network_config
 
 # Download yolov2-tiny.weights
 set(PATH "${CMAKE_CURRENT_SOURCE_DIR}/yolo_network_config/weights")
-set(FILE "${PATH}/yolov2-tiny.weights")
-message(STATUS "Checking and downloading yolov2-tiny.weights if needed ...")
-if (NOT EXISTS "${FILE}")
-  message(STATUS "... file does not exist. Downloading now ...")
-  execute_process(COMMAND wget -q https://github.com/leggedrobotics/darknet_ros/releases/download/1.1.4/yolov2-tiny.weights -P ${PATH})
-endif()
+# set(FILE "${PATH}/yolov2-tiny.weights")
+# message(STATUS "Checking and downloading yolov2-tiny.weights if needed ...")
+# if (NOT EXISTS "${FILE}")
+#   message(STATUS "... file does not exist. Downloading now ...")
+#   execute_process(COMMAND wget -q https://github.com/leggedrobotics/darknet_ros/releases/download/1.1.4/yolov2-tiny.weights -P ${PATH})
+# endif()
 
 # Download yolov3.weights
 set(FILE "${PATH}/yolov3.weights")
@@ -244,28 +244,28 @@ endif()
 ## Testing ##
 #############
 
-if(CATKIN_ENABLE_TESTING)
-  # Download yolov2.weights
-  set(PATH "${CMAKE_CURRENT_SOURCE_DIR}/yolo_network_config/weights")
-  set(FILE "${PATH}/yolov2.weights")
-  message(STATUS "Checking and downloading yolov2.weights if needed ...")
-  if (NOT EXISTS "${FILE}")
-    message(STATUS "... file does not exist. Downloading now ...")
-    execute_process(COMMAND wget -q https://github.com/leggedrobotics/darknet_ros/releases/download/1.1.4/yolov2.weights -P ${PATH})
-  endif()
+# if(CATKIN_ENABLE_TESTING)
+#   # Download yolov2.weights
+#   set(PATH "${CMAKE_CURRENT_SOURCE_DIR}/yolo_network_config/weights")
+#   set(FILE "${PATH}/yolov2.weights")
+#   message(STATUS "Checking and downloading yolov2.weights if needed ...")
+#   if (NOT EXISTS "${FILE}")
+#     message(STATUS "... file does not exist. Downloading now ...")
+#     execute_process(COMMAND wget -q https://github.com/leggedrobotics/darknet_ros/releases/download/1.1.4/yolov2.weights -P ${PATH})
+#   endif()
 
-  find_package(rostest REQUIRED)
+#   find_package(rostest REQUIRED)
 
-  # Object detection in images.
-  add_rostest_gtest(${PROJECT_NAME}_object_detection-test
-    test/object_detection.test
-    test/test_main.cpp
-    test/ObjectDetection.cpp
-  )
-  target_link_libraries(${PROJECT_NAME}_object_detection-test
-    ${catkin_LIBRARIES}
-  )
-endif()
+#   # Object detection in images.
+#   add_rostest_gtest(${PROJECT_NAME}_object_detection-test
+#     test/object_detection.test
+#     test/test_main.cpp
+#     test/ObjectDetection.cpp
+#   )
+#   target_link_libraries(${PROJECT_NAME}_object_detection-test
+#     ${catkin_LIBRARIES}
+#   )
+# endif()
 
 #########################
 ###   CLANG TOOLING   ###

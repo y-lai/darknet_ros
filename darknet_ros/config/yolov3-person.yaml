@@ -1,0 +1,40 @@
+yolo_model:
+
+  config_file:
+    name: yolov3.cfg
+  weight_file:
+    name: yolov3.weights
+  threshold:
+    value: 0.3
+  detection_classes:
+    names:
+      - person
+      - backpack
+      - umbrella
+      - handbag
+      - bottle
+      - wine glass
+      - cup
+      - fork
+      - knife
+      - spoon
+      - bowl
+      - banana
+      - apple
+      - sandwich
+      - orange
+      - broccoli
+      - carrot
+      - hot dog
+      - pizza
+      - donut
+      - cake
+      - chair
+      - pottedplant
+      - tvmonitor
+      - laptop
+      - mouse
+      - keyboard
+      - cell phone
+      - sink
+      - refrigerator

@@ -11,11 +11,6 @@ actions:
 
 publishers:
 
-  object_detector:
-    topic: /darknet_ros/found_object
-    queue_size: 1
-    latch: false
-
   bounding_boxes:
     topic: /darknet_ros/bounding_boxes
     queue_size: 1
@@ -25,9 +20,10 @@ publishers:
     topic: /darknet_ros/detection_image
     queue_size: 1
     latch: true
+    publish_image: false
 
 image_view:
 
-  enable_opencv: true
+  enable_opencv: false
   wait_key_delay: 1
   enable_console_output: true
