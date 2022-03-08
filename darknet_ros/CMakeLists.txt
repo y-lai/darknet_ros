@@ -9,6 +9,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Define path of darknet folder here.
 find_path(DARKNET_PATH
   NAMES "README.md"
+  # HINTS "/home/a5gard/catkin_ws/src/ros/darket_ros/darknet/")
   HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../darknet/")
 message(STATUS "Darknet path dir = ${DARKNET_PATH}")
 add_definitions(-DDARKNET_FILE_PATH="${DARKNET_PATH}")

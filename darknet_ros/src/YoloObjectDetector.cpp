@@ -28,7 +28,6 @@ char** detectionNames;
 YoloObjectDetector::YoloObjectDetector(ros::NodeHandle nh)
     : nodeHandle_(nh), imageTransport_(nodeHandle_), numClasses_(0), classLabels_(0), rosBoxes_(0), rosBoxCounter_(0) {
   ROS_INFO("[YoloObjectDetector] Node started.");
-
   // Read parameters from config file.
   if (!readParameters()) {
     ros::requestShutdown();
@@ -127,13 +126,20 @@ void YoloObjectDetector::init() {
   int detectionImageQueueSize;
   bool detectionImageLatch;
 
-  if(!nodeHandle_.getParam("/darknet_ros/subscribers/camera_reading/topic",cameraTopicName))
+  if(!nodeHandle_.getParam("namespace",_ns))
+  {
+    ROS_INFO("Unable to find namespace!");
+    _ns = "/yolo";
+  }
+  if(!nodeHandle_.getParam("flipRGB",_flipRGB))
+  {
+    _flipRGB = false;
+  }
+  ROS_INFO("Namespace: %s",_ns.c_str());
+  if(!nodeHandle_.getParam(_ns+"/subscribers/camera_reading/topic",cameraTopicName))
   {
     ROS_INFO("Unable to find parameter for subscribers");
-    cameraTopicName = "/camera/rgb/image_raw";
   }
-  ROS_INFO("Camera reading topic: %s",cameraTopicName.c_str());
-  // nodeHandle_.param("subscribers/camera_reading/topic", cameraTopicName, std::string("/camera/image_raw"));
   nodeHandle_.param("subscribers/camera_reading/queue_size", cameraQueueSize, 1);
   // nodeHandle_.param("publishers/object_detector/topic", objectDetectorTopicName, std::string("found_object"));
   // nodeHandle_.param("publishers/object_detector/queue_size", objectDetectorQueueSize, 1);
@@ -253,8 +259,14 @@ bool YoloObjectDetector::publishDetectionImage(const cv::Mat& detectionImage) {
   cv_bridge::CvImage cvImage;
   cvImage.header.stamp = ros::Time::now();
   cvImage.header.frame_id = "detection_image";
-  cvImage.encoding = sensor_msgs::image_encodings::RGB8;
-  // cvImage.encoding = sensor_msgs::image_encodings::BGR8;
+  if(_flipRGB)
+  {
+    cvImage.encoding = sensor_msgs::image_encodings::RGB8;
+  }
+  else
+  {
+    cvImage.encoding = sensor_msgs::image_encodings::BGR8;
+  }
   cvImage.image = detectionImage;
   detectionImagePublisher_.publish(*cvImage.toImageMsg());
   ROS_DEBUG("Detection image has been published.");
@@ -328,10 +340,10 @@ void* YoloObjectDetector::detectInThread() {
   if (nms > 0) do_nms_obj(dets, nboxes, l.classes, nms);
 
   if (enableConsoleOutput_) {
-    printf("\033[2J");
-    printf("\033[1;1H");
-    printf("\nFPS:%.1f\n", fps_);
-    printf("Objects:\n\n");
+    // printf("\033[2J");
+    // printf("\033[1;1H");
+    // printf("\nFPS:%.1f\n", fps_);
+    // printf("Objects:\n\n");
   }
   image display = buff_[(buffIndex_ + 2) % 3];
   draw_detections(display, dets, nboxes, demoThresh_, demoNames_, demoAlphabet_, demoClasses_);
@@ -453,7 +465,8 @@ void YoloObjectDetector::setupNetwork(char* cfgfile, char* weightfile, char* dat
 void YoloObjectDetector::yolo() {
   const auto wait_duration = std::chrono::milliseconds(2000);
   while (!getImageStatus()) {
-    printf("Waiting for image.\n");
+    std::string temp = "["+_ns+"] "+"Waiting for image.\n";
+    printf(temp.c_str());
     if (!isNodeRunning()) {
       return;
     }

@@ -135,6 +135,10 @@ class YoloObjectDetector {
   //! ROS node handle.
   ros::NodeHandle nodeHandle_;
 
+  //! Namespace obtained from private nodehandle
+  std::string _ns;
+  bool _flipRGB;
+
   //! Class labels.
   int numClasses_;
   std::vector<std::string> classLabels_;

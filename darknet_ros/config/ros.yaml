@@ -20,7 +20,7 @@ publishers:
     topic: /darknet_ros/detection_image
     queue_size: 1
     latch: true
-    publish_image: false
+    publish_image: true
 
 image_view:
 
