@@ -127,7 +127,13 @@ void YoloObjectDetector::init() {
   int detectionImageQueueSize;
   bool detectionImageLatch;
 
-  nodeHandle_.param("subscribers/camera_reading/topic", cameraTopicName, std::string("/camera/image_raw"));
+  if(!nodeHandle_.getParam("subscribers/camera_reading/topic",cameraTopicName))
+  {
+    ROS_INFO("Unable to find parameter for subscribers");
+    cameraTopicName = "/camera/rgb/image_raw";
+  }
+  ROS_INFO("Camera reading topic: %s",cameraTopicName.c_str());
+  // nodeHandle_.param("subscribers/camera_reading/topic", cameraTopicName, std::string("/camera/image_raw"));
   nodeHandle_.param("subscribers/camera_reading/queue_size", cameraQueueSize, 1);
   // nodeHandle_.param("publishers/object_detector/topic", objectDetectorTopicName, std::string("found_object"));
   // nodeHandle_.param("publishers/object_detector/queue_size", objectDetectorQueueSize, 1);
