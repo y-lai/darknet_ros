@@ -127,7 +127,7 @@ void YoloObjectDetector::init() {
   int detectionImageQueueSize;
   bool detectionImageLatch;
 
-  if(!nodeHandle_.getParam("subscribers/camera_reading/topic",cameraTopicName))
+  if(!nodeHandle_.getParam("/darknet_ros/subscribers/camera_reading/topic",cameraTopicName))
   {
     ROS_INFO("Unable to find parameter for subscribers");
     cameraTopicName = "/camera/rgb/image_raw";
