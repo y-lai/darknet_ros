@@ -98,4 +98,29 @@
       <param name="flipRGB" value="$(arg flipRGB)" />
   </node>
 
+  <node pkg="nodelet" type="nodelet" name="yolo_nodelet_5" output="screen" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
+      <param name="weights_path"          value="$(arg yolo_weights_path)" />
+      <param name="config_path"           value="$(arg yolo_config_path)" />
+      <rosparam command="load" file="$(arg ros_param_file)" />
+      <rosparam command="load" file="$(arg network_param_file)" />
+      <remap from="camera/rgb/image_raw" to="$(arg image5)" />
+      <remap from="darknet_ros/bounding_boxes" to="/yolo_nodelet_5/bounding_boxes" />
+      <remap from="darknet_ros/check_for_objects" to="/yolo_nodelet_5/check_for_objects" />
+      <remap from="darknet_ros/detection_image" to="/yolo_nodelet_5/detection_image" />
+      <param name="namespace" value="/yolo_nodelet_5" />
+      <param name="flipRGB" value="$(arg flipRGB)" />
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="yolo_nodelet_6" output="screen" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
+      <param name="weights_path"          value="$(arg yolo_weights_path)" />
+      <param name="config_path"           value="$(arg yolo_config_path)" />
+      <rosparam command="load" file="$(arg ros_param_file)" />
+      <rosparam command="load" file="$(arg network_param_file)" />
+      <remap from="camera/rgb/image_raw" to="$(arg image6)" />
+      <remap from="darknet_ros/bounding_boxes" to="/yolo_nodelet_6/bounding_boxes" />
+      <remap from="darknet_ros/check_for_objects" to="/yolo_nodelet_6/check_for_objects" />
+      <remap from="darknet_ros/detection_image" to="/yolo_nodelet_6/detection_image" />
+      <param name="namespace" value="/yolo_nodelet_6" />
+      <param name="flipRGB" value="$(arg flipRGB)" />
+  </node>
 </launch>
