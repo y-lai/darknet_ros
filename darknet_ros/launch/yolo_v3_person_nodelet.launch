@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <launch>
+  <!-- to flip RGB for image encoding. Only needed if using qoocamera_ros driver -->
+  <arg name="flipRGB" default="true" />
   <!-- Console launch prefix -->
   <arg name="launch_prefix" default=""/>
-  <arg name="image" default="/qoocamera/image_3" />
+  <arg name="image" default="/qoocamera_3/image_raw" />
 
   <!-- Config and weights folder. -->
   <arg name="yolo_weights_path"          default="$(find darknet_ros)/yolo_network_config/weights"/>
@@ -14,16 +15,24 @@
   <arg name="network_param_file"         default="$(find darknet_ros)/config/yolov3-person.yaml"/>
 
   <!-- Load parameters -->
-  <rosparam command="load" ns="darknet_ros" file="$(arg ros_param_file)"/>
-  <rosparam command="load" ns="darknet_ros" file="$(arg network_param_file)"/>
 
   <!-- Darknet and ros wrapper nodelet manager -->
   <node name="darknet_ros_nodelet_manager" type="nodelet" pkg="nodelet" args="manager" output="screen" respawn="true"/>
 
   <!-- Start darknet and ros wrapper -->
-  <node pkg="nodelet" type="nodelet" name="darknet_ros_nodelet" output="screen" launch-prefix="$(arg launch_prefix)" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
+  <node pkg="nodelet" type="nodelet" name="yolo_nodelet" output="screen" launch-prefix="$(arg launch_prefix)" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
     <param name="weights_path"          value="$(arg yolo_weights_path)" />
     <param name="config_path"           value="$(arg yolo_config_path)" />
+    <rosparam command="load" file="$(arg ros_param_file)"/>
+    <rosparam command="load" file="$(arg network_param_file)"/>
+
+    <remap from="camera/rgb/image_raw" to="$(arg image)" />
+    <remap from="darknet_ros/bounding_boxes" to="/yolo_nodelet/bounding_boxes" />
+    <remap from="darknet_ros/check_for_objects" to="/yolo_nodelet/check_for_objects" />
+    <remap from="darknet_ros/detection_image" to="/yolo_nodelet/detection_image" />
+    <param name="namespace" value="/yolo_nodelet" />
+    <param name="flipRGB" value="$(arg flipRGB)" />
+
   </node>
 
 </launch>

@@ -25,8 +25,8 @@
   <arg name="network_param_file"         default="$(find darknet_ros)/config/yolov3-person.yaml"/>
 
   <!-- Load parameters -->
-  <rosparam command="load" ns="darknet_ros" file="$(arg ros_param_file)"/>
-  <rosparam command="load" ns="darknet_ros" file="$(arg network_param_file)"/>
+  <!-- <rosparam command="load" ns="darknet_ros" file="$(arg ros_param_file)"/> -->
+  <!-- <rosparam command="load" ns="darknet_ros" file="$(arg network_param_file)"/> -->
 
   <!-- Darknet and ros wrapper nodelet manager -->
   <node name="darknet_ros_nodelet_manager" type="nodelet" pkg="nodelet" args="manager" respawn="true"/>
