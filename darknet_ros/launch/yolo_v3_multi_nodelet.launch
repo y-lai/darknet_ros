@@ -24,12 +24,10 @@
   <arg name="ros_param_file"             default="$(find darknet_ros)/config/ros.yaml"/>
   <arg name="network_param_file"         default="$(find darknet_ros)/config/yolov3-person.yaml"/>
 
-  <!-- Load parameters -->
-  <!-- <rosparam command="load" ns="darknet_ros" file="$(arg ros_param_file)"/> -->
-  <!-- <rosparam command="load" ns="darknet_ros" file="$(arg network_param_file)"/> -->
-
-  <!-- Darknet and ros wrapper nodelet manager -->
-  <node name="darknet_ros_nodelet_manager" type="nodelet" pkg="nodelet" args="manager" respawn="true"/>
+  <!-- Darknet and ros wrapper nodelet manager. Num of threads based on a5gard server (2 per instance + 2 for mgmt) -->
+  <node name="darknet_ros_nodelet_manager" type="nodelet" pkg="nodelet" args="manager" respawn="true">
+    <param name="num_worker_threads" value="16" />
+  </node>
 
   <node pkg="nodelet" type="nodelet" name="yolo_nodelet_0" args="load darknet_ros_nodelet darknet_ros_nodelet_manager" respawn="true" >
       <param name="weights_path"          value="$(arg yolo_weights_path)" />

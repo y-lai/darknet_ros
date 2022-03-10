@@ -151,7 +151,6 @@ class YoloObjectDetector {
 
   //! ROS subscriber and publisher.
   image_transport::Subscriber imageSubscriber_;
-  // ros::Publisher objectPublisher_;
   ros::Publisher boundingBoxesPublisher_;
 
   //! Detected objects.
